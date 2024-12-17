@@ -6,30 +6,22 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class Socio
+    public class SocioDTO
     {
-        public long Id { get; set; }
         public string Nombre { get; set; }
         public int Edad { get; set; }
         public string Equipo { get; set; }
-        public string EstadoCivil { get; set; }
-        public string NivelDeEstudios { get; set; }
+
 
         // Constructor vacío
-        public Socio() { }
+        public SocioDTO() { }
 
         // Constructor parametrizado
-        public Socio(string nombre, int edad, string equipo, string estadoCivil, string nivelDeEstudios)
+        public SocioDTO(string nombre, int edad, string equipo)
         {
             Nombre = nombre;
             Edad = edad;
             Equipo = equipo;
-            EstadoCivil = estadoCivil;
-            NivelDeEstudios = nivelDeEstudios;
         }
     }
 }
-
-
-
-

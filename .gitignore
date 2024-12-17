@@ -1,1 +1,7 @@
 IntuitChallengeUI/wwwroot/
+.vs/
+IntuitChallenge/bin/
+IntuitChallenge/obj/
+IntuitChallengeUI/obj/
+Model/bin/
+Model/obj/
