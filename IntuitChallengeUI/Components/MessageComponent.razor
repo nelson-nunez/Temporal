@@ -1,0 +1,44 @@
+﻿@using Syncfusion.Blazor.Popups
+
+<SfDialog @ref="@Dialog" IsModal="true" Visible="false" Width="500" CssClass="dlg-messageviewer">
+    <DialogTemplates>
+        <Header>
+            <div class="row my-auto px-2">
+                <h3 class="dlg-messageviewer e-dlg-header float-left pull-left p-2 my-auto"> @Title </h3>
+            </div>
+        </Header>
+        <Content>
+            <p>@Message</p>
+            <button type="button"
+                    @onclick="@CloseMessage"
+                    class="btn btn-primary mb-2 mx-auto"
+                    tabindex="101">
+                <i class="fas fa-check"></i> Continuar
+            </button>
+        </Content>
+    </DialogTemplates>
+    <DialogAnimationSettings Effect="DialogEffect.FadeZoom" Duration=400 />
+</SfDialog>
+
+@code {
+    public SfDialog Dialog { get; set; }
+   
+    public string Title { get; set; }
+    
+    public string Message { get; set; }
+
+    public async Task ShowMessage(string title, string message)
+    {
+        Title = title;
+        Message = message;
+        await Dialog.ShowAsync();
+        StateHasChanged();
+    }
+
+
+    public void CloseMessage()
+    {
+        Dialog.HideAsync();
+        StateHasChanged();
+    }
+}

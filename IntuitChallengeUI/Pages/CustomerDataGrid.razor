@@ -1,0 +1,129 @@
+﻿@page "/CustomerDataGrid"
+ 
+@using IntuitChallengeUI.Components
+@using IntuitChallengeUI.Services
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Navigations
+@using Model
+@using Model.Common
+
+@inject CustomerService CustomerService
+@inject NavigationManager NavManager
+
+<div class="container mt-5">
+    <SfGrid @ref="@Grid"
+            TValue="Customer"
+            AllowPaging="false" 
+            AllowSorting="false" 
+            Toolbar="Toolbaritems" Width="100%">
+            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(CustomAdaptor)" Adaptor="Adaptors.CustomAdaptor"></Syncfusion.Blazor.Data.SfDataManager>
+            <GridPageSettings PageSize="20" PageSizes="true"></GridPageSettings>
+        <GridEvents OnToolbarClick="ToolbarClickHandler" RowSelected="GetSelectedRecords" TValue="Customer" ></GridEvents>
+        <GridEditSettings AllowAdding="false" AllowDeleting="false" AllowEditing="false" Mode="EditMode.Normal"></GridEditSettings>
+        <GridColumns>
+            <GridColumn Field=@nameof(Customer.Id) HeaderText="Id" IsPrimaryKey="true" TextAlign="TextAlign.Center" Visible="false"></GridColumn>
+            <GridColumn Field=@nameof(Customer.CustomerName) HeaderText="Nombre" TextAlign="TextAlign.Left"></GridColumn>
+            <GridColumn Field=@nameof(Customer.CustomerSurname) HeaderText="Apellido" TextAlign="TextAlign.Left"></GridColumn>
+            <GridColumn Field=@nameof(Customer.BirthDate) HeaderText="Nacimiento" TextAlign="TextAlign.Left"></GridColumn>
+            <GridColumn Field=@nameof(Customer.CUIT) HeaderText="CUIT" TextAlign="TextAlign.Left"></GridColumn>
+            <GridColumn Field=@nameof(Customer.Address) HeaderText="Dirección" TextAlign="TextAlign.Left"></GridColumn>
+            <GridColumn Field=@nameof(Customer.PhoneNumber) HeaderText="Teléfono" TextAlign="TextAlign.Left"></GridColumn>
+            <GridColumn Field=@nameof(Customer.Email) HeaderText="Correo Elect." TextAlign="TextAlign.Left"></GridColumn>        
+        </GridColumns>
+    </SfGrid>
+</div>
+<MessageComponent @ref="messageComponent"></MessageComponent>
+
+@code {
+    #region Vars
+
+    public static CustomerService customerService;
+
+    private SfGrid<Customer> Grid { get; set; }
+
+    public List<Customer> Customers { get; set; }
+
+    private List<Object> Toolbaritems = new List<Object>()
+    {
+        new ToolbarItem() { Id = "Add", Text = "Agregar", PrefixIcon = "e-add" },
+        new ToolbarItem() { Id = "EditCustom", Text = "Editar", PrefixIcon = "e-edit" },
+        new ToolbarItem() { Id = "ReadOnly", Text = "Ver", PrefixIcon = "e-eye" },
+        new ToolbarItem() { Id = "Delete", Text = "Eliminar", PrefixIcon = "e-delete" },
+        new ToolbarItem() { Id = "Actualizar", Text = "Actualizar", PrefixIcon = "e-repeat" },
+        "Search"
+    };
+
+    public Query GridQry = new Query();
+
+    public Customer SelectedItem { get; set; } = new Customer();
+    
+    private MessageComponent messageComponent;
+
+    #endregion
+
+    #region Methods
+
+    protected override void OnInitialized()
+    {
+        Grid = new SfGrid<Customer>();
+        customerService = CustomerService;
+    }
+
+    #endregion
+
+    #region Grilla
+
+    public async void ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        var caseSwitch = args.Item.Id;
+        switch (caseSwitch)
+        {
+            case "Add":
+                NavManager.NavigateTo($"/CustomerCRUD/{SelectedItem.Id}/{ViewMode.Add}");
+                break;
+            case "EditCustom" when SelectedItem.Id > 0:
+                NavManager.NavigateTo($"/CustomerCRUD/{SelectedItem.Id}/{ViewMode.Update}");
+                break;
+            case "ReadOnly" when SelectedItem.Id > 0 :
+                NavManager.NavigateTo($"/CustomerCRUD/{SelectedItem.Id}/{ViewMode.ReadOnly}");
+                break;
+            case "Delete" when SelectedItem.Id > 0:
+                NavManager.NavigateTo($"/CustomerCRUD/{SelectedItem.Id}/{ViewMode.Delete}");
+                break;
+            case "Actualizar":
+                await Grid.Refresh();
+                StateHasChanged();
+                break;
+            default:
+                await messageComponent.ShowMessage("Atención", "Para continuar seleccione un elemento de la lista");
+                StateHasChanged();
+                break;
+        }
+    }
+
+    public async Task GetSelectedRecords(RowSelectEventArgs<Customer> args)
+    {
+        if (args.Data != null)
+            SelectedItem = (Customer)args.Data;
+    }
+
+    public class CustomAdaptor : DataAdaptor
+    {
+        public override async Task<object> ReadAsync(DataManagerRequest dm, string key = null)
+        {            
+            try
+            {
+                var tGridData = await customerService.GetCustomerListAsync(dm);
+                return dm.RequiresCounts ? new DataResult() { Result = tGridData, Count = tGridData.Count } : (object)tGridData;
+            }
+            catch (Exception ex)
+            {
+                return new DataResult();
+            }
+        }
+    }
+
+    #endregion
+}
