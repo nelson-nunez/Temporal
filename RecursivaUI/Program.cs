@@ -11,9 +11,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSyncfusionBlazor();
 
-// Scoped porque necesito una instancia por usuario
+// Scoped porque necesito una instancia por usuario----------------------------------------------
 builder.Services.AddScoped<SocioService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

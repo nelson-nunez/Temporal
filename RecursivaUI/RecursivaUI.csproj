@@ -4,10 +4,11 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>WinExe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.Blazor.Grid" Version="28.1.33" />
+    <PackageReference Include="Syncfusion.Blazor.Grid" Version="24.2.8" />
   </ItemGroup>
 
   <ItemGroup>

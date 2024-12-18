@@ -9,12 +9,19 @@
 @inject NavigationManager NavManager
 
 <div class="container mt-5">
-    <SfGrid @ref="@Grid"
+    <SfGrid ID="Grid" 
+            @ref="@Grid"
             TValue="SocioDTO"
-            AllowPaging="false"
-            AllowSorting="false" Width="100%">
+            AllowPaging="true"
+            AllowSorting="true"
+            AllowReordering="true"
+            EnableAltRow="true"
+            Width="100%">
         <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(CustomAdaptor)" Adaptor="Adaptors.CustomAdaptor"></Syncfusion.Blazor.Data.SfDataManager>
-        <GridPageSettings PageSize="20" PageSizes="true"></GridPageSettings>
+        <GridPageSettings 
+            PageSize="10" 
+            PageSizes="true">
+        </GridPageSettings>
         <GridEditSettings AllowAdding="false" AllowDeleting="false" AllowEditing="false" Mode="EditMode.Normal"></GridEditSettings>
         <GridColumns>
             <GridColumn Field=@nameof(SocioDTO.Nombre) HeaderText="Nombre" TextAlign="TextAlign.Left"></GridColumn>
@@ -55,8 +62,8 @@
         {
             try
             {
-                var tGridData = await sociosService.Get100SociosAsync();
-                return dm.RequiresCounts ? new DataResult() { Result = tGridData, Count = tGridData.Count } : (object)tGridData;
+                var tGridData = await sociosService.Get100SociosAsync(dm);
+                return dm.RequiresCounts ? tGridData : (object)tGridData;
             }
             catch (Exception ex)
             {
