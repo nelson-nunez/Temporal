@@ -1,0 +1,80 @@
+﻿@page "/MembersList"
+@using RecursivaChallengeUI.Services
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Navigations
+@using Model
+
+@inject SocioService SociosService
+@inject NavigationManager NavManager
+
+<div class="container mt-5">
+    <SfGrid @ref="@Grid"
+            TValue="SocioDTO"
+            AllowPaging="false"
+            AllowSorting="false"
+            Toolbar="Toolbaritems" Width="100%">
+        <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(CustomAdaptor)" Adaptor="Adaptors.CustomAdaptor"></Syncfusion.Blazor.Data.SfDataManager>
+        <GridPageSettings PageSize="20" PageSizes="true"></GridPageSettings>
+        <GridEditSettings AllowAdding="false" AllowDeleting="false" AllowEditing="false" Mode="EditMode.Normal"></GridEditSettings>
+        <GridColumns>
+            <GridColumn Field=@nameof(SocioDTO.Nombre) HeaderText="Nombre" TextAlign="TextAlign.Left"></GridColumn>
+            <GridColumn Field=@nameof(SocioDTO.Edad) HeaderText="Edad" TextAlign="TextAlign.Left"></GridColumn>
+            <GridColumn Field=@nameof(SocioDTO.Equipo) HeaderText="Equipo" TextAlign="TextAlign.Left"></GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
+
+@code {
+    #region Vars
+
+    public static SocioService sociosService;
+
+    private SfGrid<SocioDTO> Grid { get; set; }
+
+    public List<SocioDTO> Customers { get; set; }
+
+    private List<Object> Toolbaritems = new List<Object>()
+    {
+        new ToolbarItem() { Id = "Add", Text = "Agregar", PrefixIcon = "e-add" },
+        new ToolbarItem() { Id = "EditCustom", Text = "Editar", PrefixIcon = "e-edit" },
+        new ToolbarItem() { Id = "ReadOnly", Text = "Ver", PrefixIcon = "e-eye" },
+        new ToolbarItem() { Id = "Delete", Text = "Eliminar", PrefixIcon = "e-delete" },
+        new ToolbarItem() { Id = "Actualizar", Text = "Actualizar", PrefixIcon = "e-repeat" },
+        "Search"
+    };
+
+    public Query GridQry = new Query();
+
+    #endregion
+
+    #region Methods
+
+    protected override void OnInitialized()
+    {
+        Grid = new SfGrid<SocioDTO>();
+        sociosService = SociosService;
+    }
+
+    #endregion
+
+    #region Grilla
+
+    public class CustomAdaptor : DataAdaptor
+    {
+        public override async Task<object> ReadAsync(DataManagerRequest dm, string key = null)
+        {
+            try
+            {
+                var tGridData = await sociosService.Get100SociosAsync();
+                return dm.RequiresCounts ? new DataResult() { Result = tGridData, Count = tGridData.Count } : (object)tGridData;
+            }
+            catch (Exception ex)
+            {
+                return new DataResult();
+            }
+        }
+    }
+    #endregion
+}
