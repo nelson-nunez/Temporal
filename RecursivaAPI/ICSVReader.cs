@@ -13,7 +13,6 @@ namespace RecursivaAPI
 
         public List<Socio> ReadCsvFromFile()
         {
-            // Obtener la ruta del archivo CSV en la carpeta raíz
             var csvFilePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, CsvFileName);
             if (!System.IO.File.Exists(csvFilePath))
             {

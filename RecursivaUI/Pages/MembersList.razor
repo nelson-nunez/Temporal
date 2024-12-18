@@ -1,9 +1,8 @@
 ﻿@page "/MembersList"
-@using RecursivaChallengeUI.Services
+@using RecursivaUI.Services
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Data
 @using Syncfusion.Blazor.Grids
-@using Syncfusion.Blazor.Navigations
 @using Model
 
 @inject SocioService SociosService
@@ -13,8 +12,7 @@
     <SfGrid @ref="@Grid"
             TValue="SocioDTO"
             AllowPaging="false"
-            AllowSorting="false"
-            Toolbar="Toolbaritems" Width="100%">
+            AllowSorting="false" Width="100%">
         <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(CustomAdaptor)" Adaptor="Adaptors.CustomAdaptor"></Syncfusion.Blazor.Data.SfDataManager>
         <GridPageSettings PageSize="20" PageSizes="true"></GridPageSettings>
         <GridEditSettings AllowAdding="false" AllowDeleting="false" AllowEditing="false" Mode="EditMode.Normal"></GridEditSettings>
@@ -34,16 +32,6 @@
     private SfGrid<SocioDTO> Grid { get; set; }
 
     public List<SocioDTO> Customers { get; set; }
-
-    private List<Object> Toolbaritems = new List<Object>()
-    {
-        new ToolbarItem() { Id = "Add", Text = "Agregar", PrefixIcon = "e-add" },
-        new ToolbarItem() { Id = "EditCustom", Text = "Editar", PrefixIcon = "e-edit" },
-        new ToolbarItem() { Id = "ReadOnly", Text = "Ver", PrefixIcon = "e-eye" },
-        new ToolbarItem() { Id = "Delete", Text = "Eliminar", PrefixIcon = "e-delete" },
-        new ToolbarItem() { Id = "Actualizar", Text = "Actualizar", PrefixIcon = "e-repeat" },
-        "Search"
-    };
 
     public Query GridQry = new Query();
 

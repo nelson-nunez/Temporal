@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />
+    <ProjectReference Include="..\RecursivaAPI\RecursivaAPI.csproj" />
   </ItemGroup>
 
 </Project>

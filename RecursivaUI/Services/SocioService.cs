@@ -1,6 +1,6 @@
 ﻿using Model;
 
-namespace RecursivaChallengeUI.Services
+namespace RecursivaUI.Services
 {
     public class SocioService
     {
@@ -9,7 +9,7 @@ namespace RecursivaChallengeUI.Services
         public SocioService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("https://localhost:44387");
+            _httpClient.BaseAddress = new Uri("https://localhost:44397");
         }
 
         // 1. Obtener la cantidad total de socios registrados
@@ -30,7 +30,7 @@ namespace RecursivaChallengeUI.Services
         // 2. Obtener el promedio de edad de los socios de Racing
         public async Task<double> GetPromedioEdadSociosRacingAsync()
         {
-            var response = await _httpClient.GetAsync("/Customer/Promedio");
+            var response = await _httpClient.GetAsync("/Socio/Promedio");
             if (response.IsSuccessStatusCode)
             {
                 var promedio = await response.Content.ReadFromJsonAsync<double>();
@@ -86,7 +86,6 @@ namespace RecursivaChallengeUI.Services
                 throw new Exception("Error al obtener las estadísticas de los equipos");
             }
         }
-
     }
 }
 
